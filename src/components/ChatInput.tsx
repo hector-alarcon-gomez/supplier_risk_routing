@@ -1,27 +1,25 @@
 'use client';
-
-import { useState } from 'react';
-
 export default function ChatInput({
   onSend,
+  input,
+  onChange,
 }: {
-  onSend: (text: string) => void;
+  onSend: () => void;
+  input: string;
+  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
 }) {
-  const [value, setValue] = useState('');
-
-  function handleSubmit(e: React.FormEvent) {
-    e.preventDefault();
-    if (!value.trim()) return;
-    onSend(value);
-    setValue('');
-  }
-
   return (
-    <form onSubmit={handleSubmit} className="flex gap-2">
+    <form
+      onSubmit={(e) => {
+        e.preventDefault();
+        onSend();
+      }}
+      className="flex gap-2"
+    >
       <input
         className="flex-1 border p-2 rounded"
-        value={value}
-        onChange={(e) => setValue(e.target.value)}
+        value={input}
+        onChange={onChange}
         placeholder="Ask something..."
       />
       <button
