@@ -6,7 +6,8 @@ import LoadingIndicator from '@/components/LoadingIndicator';
 
 export default function Page() {
   const { messages, input, handleInputChange, handleSubmit, status } = useChat({
-    api: '/api/ai',
+    // api: '/api/sql_routing',
+    api: '/api/sql_generator',
     streamProtocol: 'text',
     onResponse: (r) => {
       console.log('response');
