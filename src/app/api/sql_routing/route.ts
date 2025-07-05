@@ -1,4 +1,4 @@
-import { systemPrompt } from '@/utils/prompts';
+import { systemPrompt } from '@/utils/sql_routing_prompt';
 import {
   getTopSuppliers,
   getSuppliersByIndustry,
