@@ -129,13 +129,23 @@ npm run dev
 
 ## Screenshots
 
-**Predefined query routing**
-
-![Predefined query routing](./images/predefined_query.png)
-
-**LLM-generated SQL**
+### Approach 1. LLM-generated SQL
 
 ![LLM-generated SQL](./images/generated_query.png)
+
+**Generated query**
+
+```json
+{
+  "sql": "SELECT * FROM suppliers WHERE industry = ? ORDER BY risk_score DESC LIMIT 3",
+  "params": ["Healthcare"],
+  "summary": "Returns the top three high-risk suppliers in the healthcare sector."
+}
+```
+
+### Approach 2. Predefined query routing
+
+![Predefined query routing](./images/predefined_query.png)
 
 ---
 
