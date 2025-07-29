@@ -5,6 +5,7 @@ import {
   getSuppliersByRiskCategory,
   getSuppliersByLocation
 } from '@/lib/actions';
+import { formatRowsSummary } from '@/lib/humanize';
 
 export async function POST(req: Request) {
   const { messages } = await req.json();
@@ -75,5 +76,7 @@ export async function POST(req: Request) {
   }
 
   // TODO: use another LLM to respond using the json as context
-  return Response.json({ result });
+  const friendlySummary = formatRowsSummary(result, '');
+  return Response.json({ rows: result, summary: friendlySummary });
+  // return Response.json({ result });
 }

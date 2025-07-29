@@ -1,36 +1,145 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Supplier Risk Search Tool
 
-## Getting Started
+Conversational web application that allows users to query a local supplier database in natural language.
 
-First, run the development server:
+---
+
+## Objective
+
+Develop and AI-powered chat interface to provide insights about suppliers:
+
+- Create a database with suppliers and their risk score
+- Have an AI chat interface that responds to questions about the supplier information.
+
+---
+
+## Business Impact
+
+- Faster than transcribing all the information.
+- Generates Valuable Metadata: Transforms raw uploads into structured data.
+- Can act as a Name Entity Recognition (NER) system.
+
+---
+
+## Query strategies
+
+1. **Predefined query routing** (`/api/sql_routing`)
+
+   This approach maps natural language inputs to a set of predefined SQL query templates.
+
+2. **LLM-generated SQL** (`/api/sql_generator`)
+
+   This approach allows the LLM to generate SQL dynamically from the user prompt using the database schema as context and system prompt guidance. It returns a friendly, human-readable summary.
+
+---
+
+## Features
+
+- Conversational UI powered by `@ai-sdk/react`
+- Two distinct query strategies:
+  - **Predefined query routing** (`/api/sql_routing`)
+  - **LLM-generated SQL** (`/api/sql_generator`)
+- Human-friendly summaries of SQL query results
+- Automatic parameter binding to prevent SQL injection
+- Error recovery through LLM fallback prompts
+- SQLite for fast local prototyping
+- Clean TailwindCSS-based responsive UI
+
+---
+
+## Architectural Overview
+
+The project is built using **Next.js 15 App Router**, integrates the **Vercel AI SDK**, and connects to a local **SQLite** database. A local **Ollama** instance runs a lightweight LLM (`phi3`) for SQL generation.
+
+### Frontend
+
+- `useChat` from the AI SDK handles streaming messages, status, and user input.
+- Custom components (`MessageList`, `ChatInput`).
+- Messages display summarized query responses instead of raw JSON.
+
+### Backend
+
+Two APIs power the system:
+
+#### 1. `/api/sql_routing`: Predefined Query Router
+
+This approach maps natural language inputs to a set of predefined SQL query templates.
+
+**Pros:**
+
+- Safe and deterministic
+- Easy to debug
+- Fast execution
+
+**Cons:**
+
+- Limited to known queries
+- Requires manual maintenance of patterns and SQL mapping logic
+
+#### 2. `/api/sql_generator`: LLM-Generated SQL
+
+This approach allows the LLM to generate SQL dynamically from the user prompt using the database schema and system prompt guidance.
+
+**Enhancements:**
+
+- Structured output enforced using `format` (no more custom parsing)
+- Parameter binding for safer query execution
+- Retry mechanism if the SQL fails to execute (reprompts the LLM)
+- Summary generation for end-user readability
+
+**Pros:**
+
+- Extremely flexible and scalable
+- Zero manual mapping needed
+- Leverages schema awareness
+
+**Cons:**
+
+- Potential for hallucinated or invalid SQL
+- Slower due to LLM latency
+
+---
+
+## Tech Stack
+
+- **Frontend**: Next.js 15, TailwindCSS, Vercel AI SDK (`@ai-sdk/react`)
+- **Backend**: SQLite, Ollama (with `phi3` model), Next.js
+- **LLM**: Local `phi3` model running via Ollama with JSON schema formatting
+- **UI State**: Handled via `useChat` hook (input, messages, status, error)
+
+---
+
+## Setup Instructions
 
 ```bash
+# 1. Install dependencies
+npm install
+
+# 2. Start Ollama with the desired model
+ollama run phi3
+
+# 3. Seed the database
+npm run db:seed
+
+# 4. Start the development server
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+---
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Screenshots
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+**Predefined query routing**
 
-## Learn More
+![Predefined query routing](./images/predefined_query.png)
 
-To learn more about Next.js, take a look at the following resources:
+**LLM-generated SQL**
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+![LLM-generated SQL](./images/generated_query.png)
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+---
 
-## Deploy on Vercel
+## Next steps
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- Return a human-readable summary in the routing approach
+- Unit testing
